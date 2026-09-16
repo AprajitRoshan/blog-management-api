@@ -6,7 +6,7 @@ from app.routes.auth import router as auth_router
 from app.routes.posts import router as posts_router
 from app.routes.comments import router as comments_router
 from app.routes.likes import router as likes_router
-
+from fastapi.staticfiles import StaticFiles
 
 Base.metadata.create_all(bind=engine)
 
@@ -17,11 +17,13 @@ app = FastAPI(
     description="Mini blogging system built with FastAPI"
 )
 
+app.mount("/media", StaticFiles(directory="media"), name="media")
 
 app.include_router(auth_router)
 app.include_router(posts_router)
 app.include_router(comments_router)
 app.include_router(likes_router)
+
 
 
 @app.get("/")

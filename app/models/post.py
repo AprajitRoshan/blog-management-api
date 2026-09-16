@@ -12,20 +12,16 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(200), nullable=False)
     content = Column(Text, nullable=False)
+    image = Column(String(500), nullable=True)
     author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    author = relationship(
-        "User",
-        back_populates="posts"
-    )
-
+    author = relationship("User", back_populates="posts")
     comments = relationship(
         "Comment",
         back_populates="post",
         cascade="all, delete-orphan"
     )
-
     likes = relationship(
         "Like",
         back_populates="post",

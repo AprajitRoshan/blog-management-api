@@ -1,17 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
 from sqlalchemy.orm import Session
+
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.post import Post
 from app.models.user import User
-from app.schemas.post import PostCreate, PostResponse, PostUpdate
+from app.schemas.post import PaginatedPostResponse, PostResponse, PostUpdate
+from app.services.file_upload import save_post_image
 
 
-router = APIRouter(
-    prefix="/posts",
-    tags=["Posts"]
-)
+router = APIRouter(prefix="/posts", tags=["Posts"])
 
 
 @router.post(
@@ -19,14 +18,22 @@ router = APIRouter(
     response_model=PostResponse,
     status_code=status.HTTP_201_CREATED
 )
-def create_post(
-    post_data: PostCreate,
+async def create_post(
+    title: str = Form(..., min_length=3, max_length=200),
+    content: str = Form(..., min_length=1),
+    image: UploadFile | None = File(default=None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    image_url = None
+
+    if image:
+        image_url = await save_post_image(image)
+
     post = Post(
-        title=post_data.title,
-        content=post_data.content,
+        title=title,
+        content=content,
+        image=image_url,
         author_id=current_user.id
     )
 
@@ -37,44 +44,54 @@ def create_post(
     return post
 
 
-@router.get(
-    "",
-    response_model=list[PostResponse]
-)
+@router.get("", response_model=PaginatedPostResponse)
 def get_posts(
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=10, ge=1, le=100),
+    search: str | None = Query(default=None),
     db: Session = Depends(get_db)
 ):
-    return db.query(Post).order_by(
+    query = db.query(Post)
+
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(
+            Post.title.ilike(search_term) |
+            Post.content.ilike(search_term)
+        )
+
+    total = query.count()
+
+    total_pages = (total + limit - 1) // limit
+
+    offset = (page - 1) * limit
+
+    posts = query.order_by(
         Post.created_at.desc()
-    ).all()
+    ).offset(offset).limit(limit).all()
+
+    return {
+        "items": posts,
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "total_pages": total_pages
+    }
 
 
-@router.get(
-    "/mine",
-    response_model=list[PostResponse]
-)
+@router.get("/mine", response_model=list[PostResponse])
 def get_my_posts(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     return db.query(Post).filter(
         Post.author_id == current_user.id
-    ).order_by(
-        Post.created_at.desc()
-    ).all()
+    ).order_by(Post.created_at.desc()).all()
 
 
-@router.get(
-    "/{post_id}",
-    response_model=PostResponse
-)
-def get_post(
-    post_id: int,
-    db: Session = Depends(get_db)
-):
-    post = db.query(Post).filter(
-        Post.id == post_id
-    ).first()
+@router.get("/{post_id}", response_model=PostResponse)
+def get_post(post_id: int, db: Session = Depends(get_db)):
+    post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
         raise HTTPException(
@@ -85,19 +102,16 @@ def get_post(
     return post
 
 
-@router.put(
-    "/{post_id}",
-    response_model=PostResponse
-)
-def update_post(
+@router.put("/{post_id}", response_model=PostResponse)
+async def update_post(
     post_id: int,
-    post_data: PostUpdate,
+    title: str | None = Form(default=None, min_length=3, max_length=200),
+    content: str | None = Form(default=None, min_length=1),
+    image: UploadFile | None = File(default=None),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    post = db.query(Post).filter(
-        Post.id == post_id
-    ).first()
+    post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
         raise HTTPException(
@@ -111,11 +125,14 @@ def update_post(
             detail="You can only update your own posts"
         )
 
-    if post_data.title is not None:
-        post.title = post_data.title
+    if title is not None:
+        post.title = title
 
-    if post_data.content is not None:
-        post.content = post_data.content
+    if content is not None:
+        post.content = content
+
+    if image:
+        post.image = await save_post_image(image)
 
     db.commit()
     db.refresh(post)
@@ -132,9 +149,7 @@ def delete_post(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    post = db.query(Post).filter(
-        Post.id == post_id
-    ).first()
+    post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
         raise HTTPException(
