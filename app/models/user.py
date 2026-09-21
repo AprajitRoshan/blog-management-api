@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
@@ -11,6 +11,17 @@ class User(Base):
     username = Column(String(50), unique=True, nullable=False, index=True)
     email = Column(String(100), unique=True, nullable=False, index=True)
     password = Column(String(255), nullable=False)
+
+    subscription_plan_id = Column(
+        Integer,
+        ForeignKey("subscription_plans.id"),
+        nullable=True
+    )
+
+    subscription_plan = relationship(
+        "SubscriptionPlan",
+        back_populates="subscriptions"
+    )
 
     posts = relationship(
         "Post",

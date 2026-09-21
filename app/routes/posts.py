@@ -8,6 +8,7 @@ from app.models.post import Post
 from app.models.user import User
 from app.schemas.post import PaginatedPostResponse, PostResponse, PostUpdate
 from app.services.file_upload import save_post_image
+from app.services.plan_limits import check_post_limit, check_image_limit
 
 
 router = APIRouter(prefix="/posts", tags=["Posts"])
@@ -25,9 +26,13 @@ async def create_post(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+
+    check_post_limit(db, current_user)
+
     image_url = None
 
     if image:
+        check_image_limit(db, current_user)
         image_url = await save_post_image(image)
 
     post = Post(

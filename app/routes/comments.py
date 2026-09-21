@@ -8,6 +8,7 @@ from app.models.post import Post
 from app.models.user import User
 from app.schemas.comment import CommentCreate, CommentResponse
 from app.services.email import send_email
+from app.services.plan_limits import check_comment_limit
 
 
 router = APIRouter(
@@ -27,6 +28,9 @@ def create_comment(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+
+    check_comment_limit(db, current_user)
+    
     post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
@@ -46,19 +50,16 @@ def create_comment(
     db.refresh(comment)
 
     # Send notification to the post owner
-    if post.author_id != current_user.id:
-        send_email(
-            to_email=post.author.email,
-            subject="New Comment on Your Post",
-            body=(
-                f"Hello {post.author.username},\n\n"
-                f"{current_user.username} commented on your post "
-                f"'{post.title}'.\n\n"
-                f"Comment:\n{comment.text}\n\n"
-                f"Thank you,\nBlog Management API"
-            )
+    send_email(
+        to_email=post.author.email,
+        subject="New Comment on Your Post",
+        body=(
+            f'Post: "{post.title}"\n'
+            f"User: {current_user.username}\n"
+            f"Activity: Commented on your post\n"
+            f"Time: {comment.created_at.strftime('%Y-%m-%d %I:%M %p')}\n"
         )
-
+    )
     return comment
 
 @router.get(
