@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.billing_history import BillingHistory
+from app.models.notification import Notification
 from app.models.subscription_plan import SubscriptionPlan
 from app.models.user import User
 from app.schemas.subscription import (
@@ -44,6 +45,17 @@ def subscribe(
         user=current_user,
         plan=plan
     )
+
+    # Create in-app subscription notification
+    notification = Notification(
+        user_id=current_user.id,
+        message=f"Your {billing.plan_name} subscription has been activated successfully.",
+        notification_type="subscription",
+        is_read=False
+    )
+
+    db.add(notification)
+    db.commit()
 
     return {
         "message": "Subscription activated successfully",

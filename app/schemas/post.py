@@ -27,6 +27,7 @@ class PostResponse(BaseModel):
     image: str | None = None
     author_id: int
     created_at: datetime
+    views: int
 
     class Config:
         from_attributes = True

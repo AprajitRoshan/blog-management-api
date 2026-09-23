@@ -4,3 +4,4 @@ from app.models.comment import Comment
 from app.models.like import Like
 from app.models.subscription_plan import SubscriptionPlan
 from app.models.billing_history import BillingHistory
+from app.models.notification import Notification

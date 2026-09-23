@@ -1,12 +1,21 @@
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
-from sqlalchemy.orm import Session
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    Form,
+    HTTPException,
+    Query,
+    UploadFile,
+    status,
+)
 
+from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.post import Post
 from app.models.user import User
-from app.schemas.post import PaginatedPostResponse, PostResponse, PostUpdate
+from app.schemas.post import PaginatedPostResponse, PostResponse
 from app.services.file_upload import save_post_image
 from app.services.plan_limits import check_post_limit, check_image_limit
 
@@ -26,7 +35,6 @@ async def create_post(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-
     check_post_limit(db, current_user)
 
     image_url = None
@@ -60,6 +68,7 @@ def get_posts(
 
     if search:
         search_term = f"%{search}%"
+
         query = query.filter(
             Post.title.ilike(search_term) |
             Post.content.ilike(search_term)
@@ -71,9 +80,13 @@ def get_posts(
 
     offset = (page - 1) * limit
 
-    posts = query.order_by(
-        Post.created_at.desc()
-    ).offset(offset).limit(limit).all()
+    posts = (
+        query
+        .order_by(Post.created_at.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
 
     return {
         "items": posts,
@@ -89,20 +102,36 @@ def get_my_posts(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return db.query(Post).filter(
-        Post.author_id == current_user.id
-    ).order_by(Post.created_at.desc()).all()
+    return (
+        db.query(Post)
+        .filter(Post.author_id == current_user.id)
+        .order_by(Post.created_at.desc())
+        .all()
+    )
 
 
 @router.get("/{post_id}", response_model=PostResponse)
-def get_post(post_id: int, db: Session = Depends(get_db)):
-    post = db.query(Post).filter(Post.id == post_id).first()
+def get_post(
+    post_id: int,
+    db: Session = Depends(get_db)
+):
+    post = (
+        db.query(Post)
+        .filter(Post.id == post_id)
+        .first()
+    )
 
     if not post:
         raise HTTPException(
             status_code=404,
             detail="Post not found"
         )
+
+    # Increment post view count
+    post.views += 1
+
+    db.commit()
+    db.refresh(post)
 
     return post
 
@@ -116,7 +145,11 @@ async def update_post(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    post = db.query(Post).filter(Post.id == post_id).first()
+    post = (
+        db.query(Post)
+        .filter(Post.id == post_id)
+        .first()
+    )
 
     if not post:
         raise HTTPException(
@@ -154,7 +187,11 @@ def delete_post(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    post = db.query(Post).filter(Post.id == post_id).first()
+    post = (
+        db.query(Post)
+        .filter(Post.id == post_id)
+        .first()
+    )
 
     if not post:
         raise HTTPException(

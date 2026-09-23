@@ -15,6 +15,7 @@ class Post(Base):
     image = Column(String(500), nullable=True)
     author_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    views = Column(Integer, default=0, nullable=False)
 
     author = relationship("User", back_populates="posts")
     comments = relationship(

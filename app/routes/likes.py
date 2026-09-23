@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -5,11 +7,11 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.like import Like
+from app.models.notification import Notification
 from app.models.post import Post
 from app.models.user import User
 from app.services.email import send_email
 from app.services.plan_limits import check_like_limit
-from datetime import datetime
 
 
 router = APIRouter(
@@ -24,13 +26,14 @@ def like_post(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-
     check_like_limit(db, current_user)
-    
+
     # Check whether the post exists
-    post = db.query(Post).filter(
-        Post.id == post_id
-    ).first()
+    post = (
+        db.query(Post)
+        .filter(Post.id == post_id)
+        .first()
+    )
 
     if not post:
         raise HTTPException(
@@ -39,10 +42,14 @@ def like_post(
         )
 
     # Check whether the user already liked the post
-    existing_like = db.query(Like).filter(
-        Like.post_id == post_id,
-        Like.user_id == current_user.id
-    ).first()
+    existing_like = (
+        db.query(Like)
+        .filter(
+            Like.post_id == post_id,
+            Like.user_id == current_user.id
+        )
+        .first()
+    )
 
     if existing_like:
         raise HTTPException(
@@ -70,17 +77,32 @@ def like_post(
             detail="You already liked this post"
         )
 
-    # Send email notification to the post owner
-    send_email(
-        to_email=post.author.email,
-        subject="New Like on Your Post",
-        body=(
-            f'Post: "{post.title}"\n'
-            f"User: {current_user.username}\n"
-            f"Activity: Liked your post\n"
-            f"Time: {datetime.now().strftime('%Y-%m-%d %I:%M %p')}\n"
+    # Create in-app notification for the post owner
+    if post.author_id != current_user.id:
+        notification = Notification(
+            user_id=post.author_id,
+            message=(
+                f'{current_user.username} liked your post "{post.title}"'
+            ),
+            notification_type="like",
+            is_read=False
         )
-    )
+
+        db.add(notification)
+        db.commit()
+
+    # Send email notification to the post owner
+    if post.author_id != current_user.id:
+        send_email(
+            to_email=post.author.email,
+            subject="New Like on Your Post",
+            body=(
+                f'Post: "{post.title}"\n'
+                f"User: {current_user.username}\n"
+                f"Activity: Liked your post\n"
+                f"Time: {datetime.now().strftime('%Y-%m-%d %I:%M %p')}\n"
+            )
+        )
 
     return {
         "message": "Post liked successfully"
@@ -94,10 +116,14 @@ def unlike_post(
     current_user: User = Depends(get_current_user)
 ):
     # Find the user's like
-    like = db.query(Like).filter(
-        Like.post_id == post_id,
-        Like.user_id == current_user.id
-    ).first()
+    like = (
+        db.query(Like)
+        .filter(
+            Like.post_id == post_id,
+            Like.user_id == current_user.id
+        )
+        .first()
+    )
 
     if not like:
         raise HTTPException(
