@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -27,7 +28,11 @@
             padding: 20px;
         }
 
-        /* Header */
+
+        /* =========================
+           HEADER
+        ========================= */
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -40,7 +45,11 @@
             margin: 0;
         }
 
-        /* Notification Bell */
+
+        /* =========================
+           NOTIFICATION CENTER
+        ========================= */
+
         .notification-wrapper {
             position: relative;
         }
@@ -81,7 +90,6 @@
             justify-content: center;
         }
 
-        /* Notification Dropdown */
         .notification-dropdown {
             display: none;
             position: absolute;
@@ -185,7 +193,11 @@
             font-size: 14px;
         }
 
-        /* Dashboard Cards */
+
+        /* =========================
+           DASHBOARD CARDS
+        ========================= */
+
         .cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -222,13 +234,163 @@
             max-height: 400px;
         }
 
+
+        /* =========================
+           AI CHAT
+        ========================= */
+
+        .ai-chat-button {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            width: 58px;
+            height: 58px;
+            border: none;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+        }
+
+        .ai-chat-button:hover {
+            background: #1d4ed8;
+        }
+
+        .ai-chat-window {
+            display: none;
+            position: fixed;
+            right: 25px;
+            bottom: 95px;
+            width: 360px;
+            height: 500px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .ai-chat-window.show {
+            display: flex;
+        }
+
+        .ai-chat-header {
+            background: #2563eb;
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .ai-chat-close {
+            border: none;
+            background: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .ai-message,
+        .user-message {
+            max-width: 80%;
+            padding: 10px 13px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .ai-message {
+            background: #e5e7eb;
+            color: #222;
+            margin-right: auto;
+        }
+
+        .user-message {
+            background: #2563eb;
+            color: white;
+            margin-left: auto;
+        }
+
+        .ai-chat-input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background: white;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .ai-chat-send {
+            margin-left: 8px;
+            border: none;
+            background: #2563eb;
+            color: white;
+            border-radius: 8px;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+
+        .ai-chat-send:hover {
+            background: #1d4ed8;
+        }
+
+        .ai-chat-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .ai-chat-input:disabled {
+            background: #f1f5f9;
+        }
+
+        .ai-typing {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
         @media (max-width: 900px) {
+
             .cards {
                 grid-template-columns: repeat(2, 1fr);
             }
+
         }
 
         @media (max-width: 600px) {
+
             .container {
                 margin: 20px auto;
                 padding: 15px;
@@ -250,43 +412,73 @@
             .header {
                 margin-bottom: 25px;
             }
+
+            .ai-chat-window {
+                right: 15px;
+                left: 15px;
+                bottom: 85px;
+                width: auto;
+                height: 60vh;
+            }
+
+            .ai-chat-button {
+                right: 15px;
+                bottom: 15px;
+            }
+
         }
     </style>
+
 </head>
+
 
 <body>
 
     <div class="container">
 
-        <!-- Header -->
+
+        <!-- =========================
+             HEADER
+        ========================= -->
+
         <div class="header">
 
             <h1>My Dashboard</h1>
 
+
             <!-- Notification Center -->
+
             <div class="notification-wrapper">
 
                 <button class="notification-bell" id="notificationBell" title="Notifications">
                     🔔
+
                     <span class="notification-badge" id="notificationBadge">
                         0
                     </span>
+
                 </button>
+
 
                 <div class="notification-dropdown" id="notificationDropdown">
 
                     <div class="notification-header">
+
                         <h3>Notifications</h3>
 
                         <button class="mark-all-btn" id="markAllReadBtn">
                             Mark all as read
                         </button>
+
                     </div>
 
+
                     <div class="notification-list" id="notificationList">
+
                         <div class="empty-notifications">
                             No notifications
                         </div>
+
                     </div>
 
                 </div>
@@ -295,32 +487,63 @@
 
         </div>
 
-        <!-- Dashboard Statistics -->
+
+        <!-- =========================
+             DASHBOARD STATISTICS
+        ========================= -->
+
         <div class="cards">
 
             <div class="card">
+
                 <h3>Total Posts</h3>
-                <div class="value" id="totalPosts">0</div>
+
+                <div class="value" id="totalPosts">
+                    0
+                </div>
+
             </div>
 
+
             <div class="card">
+
                 <h3>Total Comments Made</h3>
-                <div class="value" id="totalComments">0</div>
+
+                <div class="value" id="totalComments">
+                    0
+                </div>
+
             </div>
 
+
             <div class="card">
+
                 <h3>Total Likes Received</h3>
-                <div class="value" id="totalLikes">0</div>
+
+                <div class="value" id="totalLikes">
+                    0
+                </div>
+
             </div>
 
+
             <div class="card">
+
                 <h3>Total Post Views</h3>
-                <div class="value" id="totalViews">0</div>
+
+                <div class="value" id="totalViews">
+                    0
+                </div>
+
             </div>
 
         </div>
 
-        <!-- Likes and Comments Chart -->
+
+        <!-- =========================
+             LIKES / COMMENTS CHART
+        ========================= -->
+
         <div class="chart-container">
 
             <h2>Likes and Comments per Post</h2>
@@ -329,7 +552,11 @@
 
         </div>
 
-        <!-- Post Activity Chart -->
+
+        <!-- =========================
+             ACTIVITY CHART
+        ========================= -->
+
         <div class="chart-container">
 
             <h2>Post Activity Over Time</h2>
@@ -338,14 +565,70 @@
 
         </div>
 
+
+    </div>
+
+
+    <!-- =========================
+         AI CHAT BUTTON
+    ========================= -->
+
+    <button class="ai-chat-button" id="aiChatButton" title="AI Support">
+        💬
+    </button>
+
+
+    <!-- =========================
+         AI CHAT WINDOW
+    ========================= -->
+
+    <div class="ai-chat-window" id="aiChatWindow">
+
+        <div class="ai-chat-header">
+
+            <h3>AI Support</h3>
+
+            <button class="ai-chat-close" id="aiChatClose">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="ai-chat-messages" id="aiChatMessages">
+
+            <div class="ai-message">
+                Hello! 👋 How can I help you with the blog platform?
+            </div>
+
+        </div>
+
+
+        <div class="ai-chat-input-area">
+
+            <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Type your message...">
+
+            <button id="aiChatSend" class="ai-chat-send">
+                Send
+            </button>
+
+        </div>
+
     </div>
 
 
     <script>
 
-        const token = prompt("Enter your JWT access token:");
+        /* =========================
+           JWT TOKEN
+        ========================= */
+
+        const token =
+            prompt("Enter your JWT access token:");
+
 
         let postChart;
+
         let activityChart;
 
 
@@ -355,11 +638,16 @@
 
         async function loadDashboard() {
 
-            const response = await fetch("/user/dashboard", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
+            const response =
+                await fetch("/user/dashboard", {
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+
+                });
+
 
             if (!response.ok) {
 
@@ -370,34 +658,55 @@
                 return;
             }
 
-            const data = await response.json();
+
+            const data =
+                await response.json();
 
 
-            /* Dashboard statistics */
+            /* Statistics */
 
-            document.getElementById("totalPosts").textContent =
+            document.getElementById(
+                "totalPosts"
+            ).textContent =
                 data.total_posts;
 
-            document.getElementById("totalComments").textContent =
+
+            document.getElementById(
+                "totalComments"
+            ).textContent =
                 data.total_comments;
 
-            document.getElementById("totalLikes").textContent =
+
+            document.getElementById(
+                "totalLikes"
+            ).textContent =
                 data.total_likes_received;
 
-            document.getElementById("totalViews").textContent =
+
+            document.getElementById(
+                "totalViews"
+            ).textContent =
                 data.total_post_views;
 
 
-            /* Likes and Comments per Post */
+            /* Likes and Comments */
 
             const postLabels =
-                data.posts.map(post => post.title);
+                data.posts.map(
+                    post => post.title
+                );
+
 
             const likes =
-                data.posts.map(post => post.likes);
+                data.posts.map(
+                    post => post.likes
+                );
+
 
             const comments =
-                data.posts.map(post => post.comments);
+                data.posts.map(
+                    post => post.comments
+                );
 
 
             if (postChart) {
@@ -405,52 +714,73 @@
             }
 
 
-            postChart = new Chart(
-                document.getElementById("postChart"),
-                {
-                    type: "bar",
+            postChart =
+                new Chart(
+                    document.getElementById(
+                        "postChart"
+                    ),
+                    {
 
-                    data: {
-                        labels: postLabels,
+                        type: "bar",
 
-                        datasets: [
-                            {
-                                label: "Likes",
-                                data: likes
-                            },
-                            {
-                                label: "Comments",
-                                data: comments
-                            }
-                        ]
-                    },
+                        data: {
 
-                    options: {
-                        responsive: true,
+                            labels: postLabels,
 
-                        plugins: {
-                            legend: {
-                                position: "top"
-                            }
+                            datasets: [
+
+                                {
+                                    label: "Likes",
+                                    data: likes
+                                },
+
+                                {
+                                    label: "Comments",
+                                    data: comments
+                                }
+
+                            ]
+
                         },
 
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                        options: {
+
+                            responsive: true,
+
+                            plugins: {
+
+                                legend: {
+                                    position: "top"
+                                }
+
+                            },
+
+                            scales: {
+
+                                y: {
+                                    beginAtZero: true
+                                }
+
                             }
+
                         }
+
                     }
-                }
-            );
+                );
 
 
-            /* Post Activity Over Time */
+            /* Post Activity */
 
             const activityLabels =
-                data.activity.map(item => item.date);
+                data.activity.map(
+                    item => item.date
+                );
+
 
             const activityPosts =
-                data.activity.map(item => item.posts);
+                data.activity.map(
+                    item => item.posts
+                );
 
 
             if (activityChart) {
@@ -458,45 +788,63 @@
             }
 
 
-            activityChart = new Chart(
-                document.getElementById("activityChart"),
-                {
-                    type: "line",
+            activityChart =
+                new Chart(
+                    document.getElementById(
+                        "activityChart"
+                    ),
+                    {
 
-                    data: {
-                        labels: activityLabels,
+                        type: "line",
 
-                        datasets: [
-                            {
-                                label: "Posts Created",
-                                data: activityPosts,
-                                fill: false,
-                                tension: 0.3
-                            }
-                        ]
-                    },
+                        data: {
 
-                    options: {
-                        responsive: true,
+                            labels: activityLabels,
 
-                        plugins: {
-                            legend: {
-                                position: "top"
-                            }
+                            datasets: [
+
+                                {
+                                    label: "Posts Created",
+                                    data: activityPosts,
+                                    fill: false,
+                                    tension: 0.3
+                                }
+
+                            ]
+
                         },
 
-                        scales: {
-                            y: {
-                                beginAtZero: true,
+                        options: {
 
-                                ticks: {
-                                    stepSize: 1
+                            responsive: true,
+
+                            plugins: {
+
+                                legend: {
+                                    position: "top"
                                 }
+
+                            },
+
+                            scales: {
+
+                                y: {
+
+                                    beginAtZero: true,
+
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+
+                                }
+
                             }
+
                         }
+
                     }
-                }
-            );
+                );
+
         }
 
 
@@ -508,14 +856,20 @@
 
             try {
 
-                const response = await fetch(
-                    "/notifications",
-                    {
-                        headers: {
-                            "Authorization": `Bearer ${token}`
+                const response =
+                    await fetch(
+                        "/notifications",
+                        {
+
+                            headers: {
+
+                                "Authorization":
+                                    `Bearer ${token}`
+
+                            }
+
                         }
-                    }
-                );
+                    );
 
 
                 if (!response.ok) {
@@ -527,7 +881,10 @@
                     await response.json();
 
 
-                renderNotifications(notifications);
+                renderNotifications(
+                    notifications
+                );
+
 
             } catch (error) {
 
@@ -537,48 +894,57 @@
                 );
 
             }
+
         }
 
 
-        function renderNotifications(notifications) {
+        function renderNotifications(
+            notifications
+        ) {
 
             const list =
-                document.getElementById("notificationList");
+                document.getElementById(
+                    "notificationList"
+                );
+
 
             const badge =
-                document.getElementById("notificationBadge");
+                document.getElementById(
+                    "notificationBadge"
+                );
 
 
             list.innerHTML = "";
 
 
-            /* Count unread notifications */
-
             const unreadCount =
                 notifications.filter(
-                    notification => !notification.is_read
+                    notification =>
+                        !notification.is_read
                 ).length;
 
-
-            /* Update badge */
 
             if (unreadCount > 0) {
 
                 badge.textContent =
-                    unreadCount > 99 ? "99+" : unreadCount;
+                    unreadCount > 99
+                        ? "99+"
+                        : unreadCount;
 
-                badge.style.display = "flex";
+                badge.style.display =
+                    "flex";
 
             } else {
 
-                badge.style.display = "none";
+                badge.style.display =
+                    "none";
 
             }
 
 
-            /* No notifications */
-
-            if (notifications.length === 0) {
+            if (
+                notifications.length === 0
+            ) {
 
                 list.innerHTML = `
                     <div class="empty-notifications">
@@ -590,81 +956,104 @@
             }
 
 
-            /* Render notifications */
+            notifications.forEach(
+                notification => {
 
-            notifications.forEach(notification => {
-
-                const item =
-                    document.createElement("div");
-
-                item.className =
-                    "notification-item" +
-                    (notification.is_read ? "" : " unread");
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
 
 
-                const date =
-                    new Date(notification.created_at);
+                    item.className =
+                        "notification-item" +
+                        (
+                            notification.is_read
+                                ? ""
+                                : " unread"
+                        );
 
 
-                const formattedTime =
-                    date.toLocaleString();
+                    const date =
+                        new Date(
+                            notification.created_at
+                        );
 
 
-                item.innerHTML = `
-
-                    <div class="notification-message">
-                        ${escapeHtml(notification.message)}
-                    </div>
-
-                    <div class="notification-time">
-                        ${formattedTime}
-                    </div>
-
-                    <div class="notification-actions">
-
-                        ${notification.is_read
-                        ?
-                        `<button
-                                class="notification-action-btn"
-                                onclick="markAsUnread(${notification.id})"
-                            >
-                                Mark as unread
-                            </button>`
-                        :
-                        `<button
-                                class="notification-action-btn"
-                                onclick="markAsRead(${notification.id})"
-                            >
-                                Mark as read
-                            </button>`
-                    }
-
-                    </div>
-
-                `;
+                    const formattedTime =
+                        date.toLocaleString();
 
 
-                list.appendChild(item);
+                    item.innerHTML = `
 
-            });
+                        <div class="notification-message">
+                            ${escapeHtml(
+                        notification.message
+                    )}
+                        </div>
+
+                        <div class="notification-time">
+                            ${formattedTime}
+                        </div>
+
+                        <div class="notification-actions">
+
+                            ${notification.is_read
+
+                            ?
+
+                            `<button
+                                    class="notification-action-btn"
+                                    onclick="markAsUnread(${notification.id})"
+                                >
+                                    Mark as unread
+                                </button>`
+
+                            :
+
+                            `<button
+                                    class="notification-action-btn"
+                                    onclick="markAsRead(${notification.id})"
+                                >
+                                    Mark as read
+                                </button>`
+                        }
+
+                        </div>
+
+                    `;
+
+
+                    list.appendChild(item);
+
+                }
+            );
+
         }
 
 
         /* =========================
-           MARK AS READ
+           MARK NOTIFICATION READ
         ========================= */
 
-        async function markAsRead(notificationId) {
+        async function markAsRead(
+            notificationId
+        ) {
 
             const response =
                 await fetch(
                     `/notifications/${notificationId}/read`,
                     {
+
                         method: "PATCH",
 
                         headers: {
-                            "Authorization": `Bearer ${token}`
+
+                            "Authorization":
+                                `Bearer ${token}`
+
                         }
+
                     }
                 );
 
@@ -674,24 +1063,32 @@
                 await loadNotifications();
 
             }
+
         }
 
 
         /* =========================
-           MARK AS UNREAD
+           MARK NOTIFICATION UNREAD
         ========================= */
 
-        async function markAsUnread(notificationId) {
+        async function markAsUnread(
+            notificationId
+        ) {
 
             const response =
                 await fetch(
                     `/notifications/${notificationId}/unread`,
                     {
+
                         method: "PATCH",
 
                         headers: {
-                            "Authorization": `Bearer ${token}`
+
+                            "Authorization":
+                                `Bearer ${token}`
+
                         }
+
                     }
                 );
 
@@ -701,11 +1098,12 @@
                 await loadNotifications();
 
             }
+
         }
 
 
         /* =========================
-           MARK ALL AS READ
+           MARK ALL READ
         ========================= */
 
         async function markAllAsRead() {
@@ -714,11 +1112,16 @@
                 await fetch(
                     "/notifications/read-all",
                     {
+
                         method: "PATCH",
 
                         headers: {
-                            "Authorization": `Bearer ${token}`
+
+                            "Authorization":
+                                `Bearer ${token}`
+
                         }
+
                     }
                 );
 
@@ -728,6 +1131,7 @@
                 await loadNotifications();
 
             }
+
         }
 
 
@@ -738,23 +1142,34 @@
         function escapeHtml(text) {
 
             const div =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            div.textContent = text;
+
+            div.textContent =
+                text;
+
 
             return div.innerHTML;
+
         }
 
 
         /* =========================
-           BELL DROPDOWN
+           NOTIFICATION BELL
         ========================= */
 
         const bell =
-            document.getElementById("notificationBell");
+            document.getElementById(
+                "notificationBell"
+            );
+
 
         const dropdown =
-            document.getElementById("notificationDropdown");
+            document.getElementById(
+                "notificationDropdown"
+            );
 
 
         bell.addEventListener(
@@ -763,7 +1178,9 @@
 
                 event.stopPropagation();
 
-                dropdown.classList.toggle("show");
+                dropdown.classList.toggle(
+                    "show"
+                );
 
             }
         );
@@ -774,11 +1191,17 @@
             function (event) {
 
                 if (
-                    !dropdown.contains(event.target) &&
-                    !bell.contains(event.target)
+                    !dropdown.contains(
+                        event.target
+                    ) &&
+                    !bell.contains(
+                        event.target
+                    )
                 ) {
 
-                    dropdown.classList.remove("show");
+                    dropdown.classList.remove(
+                        "show"
+                    );
 
                 }
 
@@ -795,6 +1218,272 @@
 
 
         /* =========================
+           AI CHAT
+        ========================= */
+
+        const aiChatButton =
+            document.getElementById(
+                "aiChatButton"
+            );
+
+
+        const aiChatWindow =
+            document.getElementById(
+                "aiChatWindow"
+            );
+
+
+        const aiChatClose =
+            document.getElementById(
+                "aiChatClose"
+            );
+
+
+        const aiChatInput =
+            document.getElementById(
+                "aiChatInput"
+            );
+
+
+        const aiChatSend =
+            document.getElementById(
+                "aiChatSend"
+            );
+
+
+        const aiChatMessages =
+            document.getElementById(
+                "aiChatMessages"
+            );
+
+
+        /* Open AI Chat */
+
+        aiChatButton.addEventListener(
+            "click",
+            function () {
+
+                aiChatWindow.classList.add(
+                    "show"
+                );
+
+                aiChatInput.focus();
+
+            }
+        );
+
+
+        /* Close AI Chat */
+
+        aiChatClose.addEventListener(
+            "click",
+            function () {
+
+                aiChatWindow.classList.remove(
+                    "show"
+                );
+
+            }
+        );
+
+
+        /* Add Chat Message */
+
+        function addChatMessage(
+            message,
+            type
+        ) {
+
+            const messageElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            messageElement.className =
+                type === "user"
+                    ? "user-message"
+                    : "ai-message";
+
+
+            messageElement.textContent =
+                message;
+
+
+            aiChatMessages.appendChild(
+                messageElement
+            );
+
+
+            aiChatMessages.scrollTop =
+                aiChatMessages.scrollHeight;
+
+        }
+
+
+        /* Send AI Message */
+
+        async function sendAIMessage() {
+
+            const message =
+                aiChatInput.value.trim();
+
+
+            if (!message) {
+                return;
+            }
+
+
+            addChatMessage(
+                message,
+                "user"
+            );
+
+
+            aiChatInput.value =
+                "";
+
+
+            aiChatInput.disabled =
+                true;
+
+
+            aiChatSend.disabled =
+                true;
+
+
+            const typingElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            typingElement.className =
+                "ai-typing";
+
+
+            typingElement.textContent =
+                "AI is typing...";
+
+
+            aiChatMessages.appendChild(
+                typingElement
+            );
+
+
+            aiChatMessages.scrollTop =
+                aiChatMessages.scrollHeight;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/ai/chat",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                message: message
+                            })
+
+                        }
+                    );
+
+
+                typingElement.remove();
+
+
+                if (!response.ok) {
+
+                    addChatMessage(
+                        "Sorry, I couldn't process your message.",
+                        "ai"
+                    );
+
+                    return;
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                addChatMessage(
+                    data.reply,
+                    "ai"
+                );
+
+
+            } catch (error) {
+
+                typingElement.remove();
+
+
+                addChatMessage(
+                    "Unable to connect to the AI service.",
+                    "ai"
+                );
+
+
+                console.error(
+                    "AI chat error:",
+                    error
+                );
+
+
+            } finally {
+
+                aiChatInput.disabled =
+                    false;
+
+
+                aiChatSend.disabled =
+                    false;
+
+
+                aiChatInput.focus();
+
+            }
+
+        }
+
+
+        /* Send Button */
+
+        aiChatSend.addEventListener(
+            "click",
+            sendAIMessage
+        );
+
+
+        /* Enter Key */
+
+        aiChatInput.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    sendAIMessage();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
            INITIAL LOAD
         ========================= */
 
@@ -804,7 +1493,7 @@
 
 
         /* =========================
-           REAL-TIME-LIKE POLLING
+           NOTIFICATION POLLING
         ========================= */
 
         setInterval(

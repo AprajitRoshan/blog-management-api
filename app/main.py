@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from app.routes.subscriptions import router as subscriptions_router
 from app.routes.dashboard import router as dashboard_router
 from app.routes.notifications import router as notification_router
+from app.routes.ai_chat import router as ai_chat_router
 from fastapi.responses import FileResponse
 from pathlib import Path
 
@@ -31,6 +32,7 @@ app.include_router(likes_router)
 app.include_router(subscriptions_router)
 app.include_router(dashboard_router)
 app.include_router(notification_router)
+app.include_router(ai_chat_router)
 
 
 @app.get("/")
