@@ -1,0 +1,147 @@
+.dashboard-subscription-btn {
+    margin-left: 10px;
+    padding: 9px 13px;
+    border: 1px solid #dedcd7;
+    border-radius: 8px;
+    background: #fff;
+    color: #222;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dashboard-subscription-btn:hover {
+    background: #f4f3f0;
+}
+
+.subscription-message {
+    min-height: 20px;
+    margin-bottom: 14px;
+    font-size: 12px;
+}
+
+.subscription-message.success {
+    color: #18794e;
+}
+
+.subscription-message.error {
+    color: #b42318;
+}
+
+.subscription-message.loading {
+    color: #666;
+}
+
+.subscription-plans {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.subscription-card,
+.billing-card {
+    background: #fff;
+    border: 1px solid #e6e3de;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.subscription-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: #999;
+    font-weight: 700;
+}
+
+.subscription-card h3 {
+    margin: 6px 0;
+    font-size: 20px;
+}
+
+.subscription-price {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 13px;
+}
+
+.subscription-limits {
+    color: #666;
+    font-size: 11px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.subscribe-btn {
+    width: 100%;
+}
+
+.billing-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.billing-card-header h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.billing-history {
+    display: flex;
+    flex-direction: column;
+}
+
+.billing-row {
+    display: grid;
+    grid-template-columns: 1.2fr .7fr 1.3fr auto;
+    gap: 15px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eeeae5;
+    font-size: 11px;
+}
+
+.billing-row:last-child {
+    border-bottom: none;
+}
+
+.billing-row small {
+    display: block;
+    color: #888;
+    margin-top: 3px;
+}
+
+.billing-row a {
+    color: #333;
+    font-weight: 600;
+}
+
+.billing-transaction {
+    color: #777;
+    word-break: break-all;
+}
+
+.billing-empty,
+.subscription-error {
+    color: #888;
+    font-size: 12px;
+    padding: 10px 0;
+}
+
+@media (max-width: 900px) {
+    .subscription-plans {
+        grid-template-columns: 1fr;
+    }
+
+    .billing-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 650px) {
+    .dashboard-subscription-btn {
+        display: none;
+    }
+}

@@ -6,447 +6,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Dashboard</title>
+    <title>Blog Management API</title>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #222;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        h1 {
-            margin: 0;
-        }
-
-
-        /* =========================
-           NOTIFICATION CENTER
-        ========================= */
-
-        .notification-wrapper {
-            position: relative;
-        }
-
-        .notification-bell {
-            position: relative;
-            width: 46px;
-            height: 46px;
-            border: none;
-            border-radius: 50%;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            cursor: pointer;
-            font-size: 23px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notification-bell:hover {
-            background: #f0f2f5;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            min-width: 20px;
-            height: 20px;
-            padding: 0 5px;
-            border-radius: 10px;
-            background: #e53935;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            top: 55px;
-            right: 0;
-            width: 380px;
-            max-width: calc(100vw - 40px);
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .notification-dropdown.show {
-            display: block;
-        }
-
-        .notification-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .notification-header h3 {
-            margin: 0;
-            font-size: 17px;
-        }
-
-        .mark-all-btn {
-            border: none;
-            background: none;
-            color: #2563eb;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .mark-all-btn:hover {
-            text-decoration: underline;
-        }
-
-        .notification-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .notification-item {
-            padding: 14px 16px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-        }
-
-        .notification-item:hover {
-            background: #f7f8fa;
-        }
-
-        .notification-item.unread {
-            background: #eef4ff;
-        }
-
-        .notification-message {
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 6px;
-        }
-
-        .notification-item.unread .notification-message {
-            font-weight: bold;
-        }
-
-        .notification-time {
-            font-size: 12px;
-            color: #777;
-        }
-
-        .notification-actions {
-            margin-top: 8px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .notification-action-btn {
-            border: none;
-            background: none;
-            color: #2563eb;
-            cursor: pointer;
-            font-size: 12px;
-            padding: 0;
-        }
-
-        .notification-action-btn:hover {
-            text-decoration: underline;
-        }
-
-        .empty-notifications {
-            padding: 30px 15px;
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-        }
-
-
-        /* =========================
-           DASHBOARD CARDS
-        ========================= */
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 16px;
-        }
-
-        .value {
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .chart-container {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        canvas {
-            max-height: 400px;
-        }
-
-
-        /* =========================
-           AI CHAT
-        ========================= */
-
-        .ai-chat-button {
-            position: fixed;
-            right: 25px;
-            bottom: 25px;
-            width: 58px;
-            height: 58px;
-            border: none;
-            border-radius: 50%;
-            background: #2563eb;
-            color: white;
-            font-size: 25px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 2000;
-        }
-
-        .ai-chat-button:hover {
-            background: #1d4ed8;
-        }
-
-        .ai-chat-window {
-            display: none;
-            position: fixed;
-            right: 25px;
-            bottom: 95px;
-            width: 360px;
-            height: 500px;
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            z-index: 2000;
-            flex-direction: column;
-        }
-
-        .ai-chat-window.show {
-            display: flex;
-        }
-
-        .ai-chat-header {
-            background: #2563eb;
-            color: white;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .ai-chat-header h3 {
-            margin: 0;
-            font-size: 16px;
-        }
-
-        .ai-chat-close {
-            border: none;
-            background: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .ai-chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background: #f8fafc;
-        }
-
-        .ai-message,
-        .user-message {
-            max-width: 80%;
-            padding: 10px 13px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            font-size: 14px;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
-
-        .ai-message {
-            background: #e5e7eb;
-            color: #222;
-            margin-right: auto;
-        }
-
-        .user-message {
-            background: #2563eb;
-            color: white;
-            margin-left: auto;
-        }
-
-        .ai-chat-input-area {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-            background: white;
-        }
-
-        .ai-chat-input {
-            flex: 1;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 10px;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .ai-chat-send {
-            margin-left: 8px;
-            border: none;
-            background: #2563eb;
-            color: white;
-            border-radius: 8px;
-            padding: 0 15px;
-            cursor: pointer;
-        }
-
-        .ai-chat-send:hover {
-            background: #1d4ed8;
-        }
-
-        .ai-chat-send:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .ai-chat-input:disabled {
-            background: #f1f5f9;
-        }
-
-        .ai-typing {
-            font-size: 13px;
-            color: #777;
-            margin-bottom: 10px;
-            font-style: italic;
-        }
-
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 900px) {
-
-            .cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-        }
-
-        @media (max-width: 600px) {
-
-            .container {
-                margin: 20px auto;
-                padding: 15px;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-            }
-
-            .notification-dropdown {
-                position: fixed;
-                top: 75px;
-                right: 20px;
-                left: 20px;
-                width: auto;
-                max-width: none;
-            }
-
-            .header {
-                margin-bottom: 25px;
-            }
-
-            .ai-chat-window {
-                right: 15px;
-                left: 15px;
-                bottom: 85px;
-                width: auto;
-                height: 60vh;
-            }
-
-            .ai-chat-button {
-                right: 15px;
-                bottom: 15px;
-            }
-
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/posts.css">
+    <link rel="stylesheet" href="/static/css/notifications.css">
+    <link rel="stylesheet" href="/static/css/comments.css">
+    <link rel="stylesheet" href="/static/css/subscriptions.css">
 
 </head>
 
-
 <body>
 
-    <div class="container">
+    <!-- ================================
+         NAVBAR
+    ================================= -->
 
+    <nav class="blog-navbar">
 
-        <!-- =========================
-             HEADER
-        ========================= -->
+        <div class="nav-brand">
+            <span class="brand-mark">B</span>
+            <span>BlogSpace</span>
+        </div>
 
-        <div class="header">
+        <div class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#posts">Posts</a>
+            <a href="#analytics">Analytics</a>
+        </div>
 
-            <h1>My Dashboard</h1>
-
-
-            <!-- Notification Center -->
+        <div class="nav-actions">
 
             <div class="notification-wrapper">
 
@@ -458,7 +49,6 @@
                     </span>
 
                 </button>
-
 
                 <div class="notification-dropdown" id="notificationDropdown">
 
@@ -472,121 +62,418 @@
 
                     </div>
 
-
                     <div class="notification-list" id="notificationList">
-
                         <div class="empty-notifications">
                             No notifications
                         </div>
-
                     </div>
 
                 </div>
 
             </div>
 
+            <button type="button" class="dashboard-subscription-btn" id="subscriptionNavBtn">Subscriptions</button>
+            <button type="button" class="dashboard-logout-btn" id="dashboardLogoutBtn">Logout</button>
+
         </div>
 
+    </nav>
 
-        <!-- =========================
-             DASHBOARD STATISTICS
-        ========================= -->
 
-        <div class="cards">
+    <!-- ================================
+         MAIN
+    ================================= -->
 
-            <div class="card">
+    <main class="blog-container">
 
-                <h3>Total Posts</h3>
 
-                <div class="value" id="totalPosts">
-                    0
+        <!-- ================================
+             HERO
+        ================================= -->
+
+        <section class="blog-hero">
+
+            <div>
+
+                <span class="hero-label">
+                    PERSONAL BLOG
+                </span>
+
+                <h1>
+                    Welcome back 👋
+                </h1>
+
+                <p>
+                    Write, manage and track everything happening
+                    across your blog.
+                </p>
+
+            </div>
+
+            <a href="#posts" class="hero-button">
+                Manage Posts
+            </a>
+
+        </section>
+
+
+        <!-- ================================
+             OVERVIEW
+        ================================= -->
+
+        <section class="dashboard-section" id="overview">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        OVERVIEW
+                    </span>
+
+                    <h2>Your activity</h2>
+
+                    <p>
+                        A quick look at your blog performance.
+                    </p>
+
                 </div>
 
             </div>
 
 
-            <div class="card">
+            <div class="stats-grid">
 
-                <h3>Total Comments Made</h3>
+                <div class="stat-card">
 
-                <div class="value" id="totalComments">
-                    0
+                    <div class="stat-icon">
+                        ✍
+                    </div>
+
+                    <div>
+                        <span>Total Posts</span>
+                        <strong id="totalPosts">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        💬
+                    </div>
+
+                    <div>
+                        <span>Comments Made</span>
+                        <strong id="totalComments">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ♥
+                    </div>
+
+                    <div>
+                        <span>Likes Received</span>
+                        <strong id="totalLikes">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        👁
+                    </div>
+
+                    <div>
+                        <span>Post Views</span>
+                        <strong id="totalViews">0</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================
+             POSTS
+        ================================= -->
+
+        <section class="dashboard-section" id="posts">
+
+            <div class="section-heading posts-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        BLOG
+                    </span>
+
+                    <h2>Posts</h2>
+
+                    <p>
+                        Browse, create and manage your blog posts.
+                    </p>
+
+                </div>
+
+                <button id="showCreatePostBtn" class="post-primary-btn">
+                    + Create Post
+                </button>
+
+            </div>
+
+
+            <!-- CREATE / EDIT FORM -->
+
+            <div class="post-form-card" id="postFormCard">
+
+                <div class="post-form-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            EDITOR
+                        </span>
+
+                        <h3 id="postFormTitle">
+                            Create New Post
+                        </h3>
+
+                    </div>
+
+                    <button type="button" id="closePostFormBtn" class="post-close-btn">
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form id="postForm">
+
+                    <input type="hidden" id="editingPostId">
+
+
+                    <div class="post-form-group">
+
+                        <label for="postTitle">
+                            Title
+                        </label>
+
+                        <input type="text" id="postTitle" placeholder="Enter your post title" required>
+
+                    </div>
+
+
+                    <div class="post-form-group">
+
+                        <label for="postContent">
+                            Content
+                        </label>
+
+                        <textarea id="postContent" rows="8" placeholder="Write your story..." required></textarea>
+
+                    </div>
+
+
+                    <div class="post-form-group">
+
+                        <label for="postImage">
+                            Cover Image
+                        </label>
+
+                        <input type="file" id="postImage" accept="image/*">
+
+                    </div>
+
+
+                    <div class="post-form-actions">
+
+                        <button type="submit" id="savePostBtn" class="post-primary-btn">
+                            Publish Post
+                        </button>
+
+                        <button type="button" id="cancelPostBtn" class="post-secondary-btn">
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="posts-toolbar">
+
+                <div class="post-search-box">
+
+                    <input type="text" id="postSearch" placeholder="Search posts...">
+
+                    <button id="searchPostsBtn" class="post-secondary-btn">
+                        Search
+                    </button>
+
+                </div>
+
+
+                <div class="post-filter-buttons">
+
+                    <button id="allPostsBtn" class="post-filter-btn active">
+                        All Posts
+                    </button>
+
+                    <button id="myPostsBtn" class="post-filter-btn">
+                        My Posts
+                    </button>
+
                 </div>
 
             </div>
 
 
-            <div class="card">
+            <!-- POSTS -->
 
-                <h3>Total Likes Received</h3>
+            <div class="posts-list" id="postsList"></div>
 
-                <div class="value" id="totalLikes">
-                    0
+
+            <!-- PAGINATION -->
+
+            <div class="posts-pagination" id="postsPagination"></div>
+
+        </section>
+
+
+        <!-- ================================
+             SUBSCRIPTIONS
+        ================================= -->
+
+        <section class="dashboard-section" id="subscriptions">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">ACCOUNT</span>
+                    <h2>Subscriptions</h2>
+                    <p>Choose a plan and view your billing history.</p>
+                </div>
+            </div>
+
+            <div id="subscriptionMessage" class="subscription-message"></div>
+
+            <div class="subscription-plans" id="subscriptionPlans"></div>
+
+            <div class="billing-card">
+                <div class="billing-card-header">
+                    <div>
+                        <span class="section-label">PAYMENTS</span>
+                        <h3>Billing History</h3>
+                    </div>
+                    <button type="button" id="refreshBillingBtn" class="post-secondary-btn">Refresh</button>
+                </div>
+                <div id="billingHistory" class="billing-history"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ================================
+             ANALYTICS
+        ================================= -->
+
+        <section class="dashboard-section" id="analytics">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        INSIGHTS
+                    </span>
+
+                    <h2>Analytics</h2>
+
+                    <p>
+                        Understand how your content is performing.
+                    </p>
+
                 </div>
 
             </div>
 
 
-            <div class="card">
+            <div class="analytics-grid">
 
-                <h3>Total Post Views</h3>
+                <div class="analytics-card">
 
-                <div class="value" id="totalViews">
-                    0
+                    <div class="analytics-card-header">
+
+                        <div>
+                            <h3>Likes & Comments</h3>
+                            <p>Engagement by post</p>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="postChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <div class="analytics-card">
+
+                    <div class="analytics-card-header">
+
+                        <div>
+                            <h3>Post Activity</h3>
+                            <p>Posts created over time</p>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-wrapper">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
+        </section>
 
 
-        <!-- =========================
-             LIKES / COMMENTS CHART
-        ========================= -->
-
-        <div class="chart-container">
-
-            <h2>Likes and Comments per Post</h2>
-
-            <canvas id="postChart"></canvas>
-
-        </div>
+    </main>
 
 
-        <!-- =========================
-             ACTIVITY CHART
-        ========================= -->
-
-        <div class="chart-container">
-
-            <h2>Post Activity Over Time</h2>
-
-            <canvas id="activityChart"></canvas>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- =========================
-         AI CHAT BUTTON
-    ========================= -->
+    <!-- ================================
+         AI CHAT
+    ================================= -->
 
     <button class="ai-chat-button" id="aiChatButton" title="AI Support">
         💬
     </button>
 
 
-    <!-- =========================
-         AI CHAT WINDOW
-    ========================= -->
-
     <div class="ai-chat-window" id="aiChatWindow">
 
         <div class="ai-chat-header">
 
-            <h3>AI Support</h3>
+            <div>
+                <strong>AI Support</strong>
+                <small>Blog assistant</small>
+            </div>
 
             <button class="ai-chat-close" id="aiChatClose">
                 ×
@@ -606,7 +493,7 @@
 
         <div class="ai-chat-input-area">
 
-            <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Type your message...">
+            <input type="text" id="aiChatInput" class="ai-chat-input" placeholder="Ask something...">
 
             <button id="aiChatSend" class="ai-chat-send">
                 Send
@@ -617,890 +504,38 @@
     </div>
 
 
+    <!-- ================================
+         JAVASCRIPT
+    ================================= -->
+
+    <script src="/static/js/dashboard.js"></script>
+    <script src="/static/js/notifications.js"></script>
+    <script src="/static/js/posts.js?v=20260927"></script>
+    <script src="/static/js/post-interactions.js?v=20260927"></script>
+    <script src="/static/js/likes.js?v=20260927"></script>
+    <script src="/static/js/comments.js?v=20260927"></script>
+    <script src="/static/js/subscriptions.js?v=20260927"></script>
+    <script src="/static/js/ai-chat.js"></script>
+
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const logoutBtn = document.getElementById("dashboardLogoutBtn");
+            const subscriptionBtn = document.getElementById("subscriptionNavBtn");
 
-        /* =========================
-           JWT TOKEN
-        ========================= */
-
-        const token =
-            prompt("Enter your JWT access token:");
-
-
-        let postChart;
-
-        let activityChart;
-
-
-        /* =========================
-           DASHBOARD
-        ========================= */
-
-        async function loadDashboard() {
-
-            const response =
-                await fetch("/user/dashboard", {
-
-                    headers: {
-                        "Authorization":
-                            `Bearer ${token}`
-                    }
-
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", function () {
+                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("token");
+                    window.location.href = "/static/login.html";
                 });
-
-
-            if (!response.ok) {
-
-                alert(
-                    "Unable to load dashboard. Please check your login token."
-                );
-
-                return;
             }
 
-
-            const data =
-                await response.json();
-
-
-            /* Statistics */
-
-            document.getElementById(
-                "totalPosts"
-            ).textContent =
-                data.total_posts;
-
-
-            document.getElementById(
-                "totalComments"
-            ).textContent =
-                data.total_comments;
-
-
-            document.getElementById(
-                "totalLikes"
-            ).textContent =
-                data.total_likes_received;
-
-
-            document.getElementById(
-                "totalViews"
-            ).textContent =
-                data.total_post_views;
-
-
-            /* Likes and Comments */
-
-            const postLabels =
-                data.posts.map(
-                    post => post.title
-                );
-
-
-            const likes =
-                data.posts.map(
-                    post => post.likes
-                );
-
-
-            const comments =
-                data.posts.map(
-                    post => post.comments
-                );
-
-
-            if (postChart) {
-                postChart.destroy();
+            if (subscriptionBtn) {
+                subscriptionBtn.addEventListener("click", function () {
+                    document.getElementById("subscriptions")?.scrollIntoView({ behavior: "smooth" });
+                });
             }
-
-
-            postChart =
-                new Chart(
-                    document.getElementById(
-                        "postChart"
-                    ),
-                    {
-
-                        type: "bar",
-
-                        data: {
-
-                            labels: postLabels,
-
-                            datasets: [
-
-                                {
-                                    label: "Likes",
-                                    data: likes
-                                },
-
-                                {
-                                    label: "Comments",
-                                    data: comments
-                                }
-
-                            ]
-
-                        },
-
-                        options: {
-
-                            responsive: true,
-
-                            plugins: {
-
-                                legend: {
-                                    position: "top"
-                                }
-
-                            },
-
-                            scales: {
-
-                                y: {
-                                    beginAtZero: true
-                                }
-
-                            }
-
-                        }
-
-                    }
-                );
-
-
-            /* Post Activity */
-
-            const activityLabels =
-                data.activity.map(
-                    item => item.date
-                );
-
-
-            const activityPosts =
-                data.activity.map(
-                    item => item.posts
-                );
-
-
-            if (activityChart) {
-                activityChart.destroy();
-            }
-
-
-            activityChart =
-                new Chart(
-                    document.getElementById(
-                        "activityChart"
-                    ),
-                    {
-
-                        type: "line",
-
-                        data: {
-
-                            labels: activityLabels,
-
-                            datasets: [
-
-                                {
-                                    label: "Posts Created",
-                                    data: activityPosts,
-                                    fill: false,
-                                    tension: 0.3
-                                }
-
-                            ]
-
-                        },
-
-                        options: {
-
-                            responsive: true,
-
-                            plugins: {
-
-                                legend: {
-                                    position: "top"
-                                }
-
-                            },
-
-                            scales: {
-
-                                y: {
-
-                                    beginAtZero: true,
-
-                                    ticks: {
-                                        stepSize: 1
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-                );
-
-        }
-
-
-        /* =========================
-           NOTIFICATIONS
-        ========================= */
-
-        async function loadNotifications() {
-
-            try {
-
-                const response =
-                    await fetch(
-                        "/notifications",
-                        {
-
-                            headers: {
-
-                                "Authorization":
-                                    `Bearer ${token}`
-
-                            }
-
-                        }
-                    );
-
-
-                if (!response.ok) {
-                    return;
-                }
-
-
-                const notifications =
-                    await response.json();
-
-
-                renderNotifications(
-                    notifications
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "Failed to load notifications:",
-                    error
-                );
-
-            }
-
-        }
-
-
-        function renderNotifications(
-            notifications
-        ) {
-
-            const list =
-                document.getElementById(
-                    "notificationList"
-                );
-
-
-            const badge =
-                document.getElementById(
-                    "notificationBadge"
-                );
-
-
-            list.innerHTML = "";
-
-
-            const unreadCount =
-                notifications.filter(
-                    notification =>
-                        !notification.is_read
-                ).length;
-
-
-            if (unreadCount > 0) {
-
-                badge.textContent =
-                    unreadCount > 99
-                        ? "99+"
-                        : unreadCount;
-
-                badge.style.display =
-                    "flex";
-
-            } else {
-
-                badge.style.display =
-                    "none";
-
-            }
-
-
-            if (
-                notifications.length === 0
-            ) {
-
-                list.innerHTML = `
-                    <div class="empty-notifications">
-                        No notifications
-                    </div>
-                `;
-
-                return;
-            }
-
-
-            notifications.forEach(
-                notification => {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    item.className =
-                        "notification-item" +
-                        (
-                            notification.is_read
-                                ? ""
-                                : " unread"
-                        );
-
-
-                    const date =
-                        new Date(
-                            notification.created_at
-                        );
-
-
-                    const formattedTime =
-                        date.toLocaleString();
-
-
-                    item.innerHTML = `
-
-                        <div class="notification-message">
-                            ${escapeHtml(
-                        notification.message
-                    )}
-                        </div>
-
-                        <div class="notification-time">
-                            ${formattedTime}
-                        </div>
-
-                        <div class="notification-actions">
-
-                            ${notification.is_read
-
-                            ?
-
-                            `<button
-                                    class="notification-action-btn"
-                                    onclick="markAsUnread(${notification.id})"
-                                >
-                                    Mark as unread
-                                </button>`
-
-                            :
-
-                            `<button
-                                    class="notification-action-btn"
-                                    onclick="markAsRead(${notification.id})"
-                                >
-                                    Mark as read
-                                </button>`
-                        }
-
-                        </div>
-
-                    `;
-
-
-                    list.appendChild(item);
-
-                }
-            );
-
-        }
-
-
-        /* =========================
-           MARK NOTIFICATION READ
-        ========================= */
-
-        async function markAsRead(
-            notificationId
-        ) {
-
-            const response =
-                await fetch(
-                    `/notifications/${notificationId}/read`,
-                    {
-
-                        method: "PATCH",
-
-                        headers: {
-
-                            "Authorization":
-                                `Bearer ${token}`
-
-                        }
-
-                    }
-                );
-
-
-            if (response.ok) {
-
-                await loadNotifications();
-
-            }
-
-        }
-
-
-        /* =========================
-           MARK NOTIFICATION UNREAD
-        ========================= */
-
-        async function markAsUnread(
-            notificationId
-        ) {
-
-            const response =
-                await fetch(
-                    `/notifications/${notificationId}/unread`,
-                    {
-
-                        method: "PATCH",
-
-                        headers: {
-
-                            "Authorization":
-                                `Bearer ${token}`
-
-                        }
-
-                    }
-                );
-
-
-            if (response.ok) {
-
-                await loadNotifications();
-
-            }
-
-        }
-
-
-        /* =========================
-           MARK ALL READ
-        ========================= */
-
-        async function markAllAsRead() {
-
-            const response =
-                await fetch(
-                    "/notifications/read-all",
-                    {
-
-                        method: "PATCH",
-
-                        headers: {
-
-                            "Authorization":
-                                `Bearer ${token}`
-
-                        }
-
-                    }
-                );
-
-
-            if (response.ok) {
-
-                await loadNotifications();
-
-            }
-
-        }
-
-
-        /* =========================
-           HTML SAFETY
-        ========================= */
-
-        function escapeHtml(text) {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.textContent =
-                text;
-
-
-            return div.innerHTML;
-
-        }
-
-
-        /* =========================
-           NOTIFICATION BELL
-        ========================= */
-
-        const bell =
-            document.getElementById(
-                "notificationBell"
-            );
-
-
-        const dropdown =
-            document.getElementById(
-                "notificationDropdown"
-            );
-
-
-        bell.addEventListener(
-            "click",
-            function (event) {
-
-                event.stopPropagation();
-
-                dropdown.classList.toggle(
-                    "show"
-                );
-
-            }
-        );
-
-
-        document.addEventListener(
-            "click",
-            function (event) {
-
-                if (
-                    !dropdown.contains(
-                        event.target
-                    ) &&
-                    !bell.contains(
-                        event.target
-                    )
-                ) {
-
-                    dropdown.classList.remove(
-                        "show"
-                    );
-
-                }
-
-            }
-        );
-
-
-        document.getElementById(
-            "markAllReadBtn"
-        ).addEventListener(
-            "click",
-            markAllAsRead
-        );
-
-
-        /* =========================
-           AI CHAT
-        ========================= */
-
-        const aiChatButton =
-            document.getElementById(
-                "aiChatButton"
-            );
-
-
-        const aiChatWindow =
-            document.getElementById(
-                "aiChatWindow"
-            );
-
-
-        const aiChatClose =
-            document.getElementById(
-                "aiChatClose"
-            );
-
-
-        const aiChatInput =
-            document.getElementById(
-                "aiChatInput"
-            );
-
-
-        const aiChatSend =
-            document.getElementById(
-                "aiChatSend"
-            );
-
-
-        const aiChatMessages =
-            document.getElementById(
-                "aiChatMessages"
-            );
-
-
-        /* Open AI Chat */
-
-        aiChatButton.addEventListener(
-            "click",
-            function () {
-
-                aiChatWindow.classList.add(
-                    "show"
-                );
-
-                aiChatInput.focus();
-
-            }
-        );
-
-
-        /* Close AI Chat */
-
-        aiChatClose.addEventListener(
-            "click",
-            function () {
-
-                aiChatWindow.classList.remove(
-                    "show"
-                );
-
-            }
-        );
-
-
-        /* Add Chat Message */
-
-        function addChatMessage(
-            message,
-            type
-        ) {
-
-            const messageElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            messageElement.className =
-                type === "user"
-                    ? "user-message"
-                    : "ai-message";
-
-
-            messageElement.textContent =
-                message;
-
-
-            aiChatMessages.appendChild(
-                messageElement
-            );
-
-
-            aiChatMessages.scrollTop =
-                aiChatMessages.scrollHeight;
-
-        }
-
-
-        /* Send AI Message */
-
-        async function sendAIMessage() {
-
-            const message =
-                aiChatInput.value.trim();
-
-
-            if (!message) {
-                return;
-            }
-
-
-            addChatMessage(
-                message,
-                "user"
-            );
-
-
-            aiChatInput.value =
-                "";
-
-
-            aiChatInput.disabled =
-                true;
-
-
-            aiChatSend.disabled =
-                true;
-
-
-            const typingElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            typingElement.className =
-                "ai-typing";
-
-
-            typingElement.textContent =
-                "AI is typing...";
-
-
-            aiChatMessages.appendChild(
-                typingElement
-            );
-
-
-            aiChatMessages.scrollTop =
-                aiChatMessages.scrollHeight;
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        "/ai/chat",
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                message: message
-                            })
-
-                        }
-                    );
-
-
-                typingElement.remove();
-
-
-                if (!response.ok) {
-
-                    addChatMessage(
-                        "Sorry, I couldn't process your message.",
-                        "ai"
-                    );
-
-                    return;
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                addChatMessage(
-                    data.reply,
-                    "ai"
-                );
-
-
-            } catch (error) {
-
-                typingElement.remove();
-
-
-                addChatMessage(
-                    "Unable to connect to the AI service.",
-                    "ai"
-                );
-
-
-                console.error(
-                    "AI chat error:",
-                    error
-                );
-
-
-            } finally {
-
-                aiChatInput.disabled =
-                    false;
-
-
-                aiChatSend.disabled =
-                    false;
-
-
-                aiChatInput.focus();
-
-            }
-
-        }
-
-
-        /* Send Button */
-
-        aiChatSend.addEventListener(
-            "click",
-            sendAIMessage
-        );
-
-
-        /* Enter Key */
-
-        aiChatInput.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    sendAIMessage();
-
-                }
-
-            }
-        );
-
-
-        /* =========================
-           INITIAL LOAD
-        ========================= */
-
-        loadDashboard();
-
-        loadNotifications();
-
-
-        /* =========================
-           NOTIFICATION POLLING
-        ========================= */
-
-        setInterval(
-            loadNotifications,
-            5000
-        );
-
+        });
     </script>
 
 </body>

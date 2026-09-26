@@ -1,0 +1,424 @@
+/* =========================================================
+   POSTS
+========================================================= */
+
+.posts-heading {
+    align-items: center;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.post-primary-btn {
+    border: none;
+    background: #222;
+    color: #fff;
+    padding: 11px 17px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.post-primary-btn:hover {
+    background: #444;
+}
+
+.post-secondary-btn {
+    border: 1px solid #d8d5d0;
+    background: #fff;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.post-form-card {
+    display: none;
+    background: #fff;
+    border: 1px solid #e3e0db;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 22px;
+}
+
+.post-form-card.show {
+    display: block;
+}
+
+.post-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.post-form-header h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.post-close-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f1f0ed;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.post-form-group {
+    margin-bottom: 17px;
+}
+
+.post-form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+}
+
+.post-form-group input,
+.post-form-group textarea {
+    width: 100%;
+    border: 1px solid #dcd9d4;
+    border-radius: 8px;
+    padding: 11px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+.post-form-actions {
+    display: flex;
+    gap: 9px;
+    margin-top: 20px;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.posts-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 14px;
+    background: #fff;
+    border: 1px solid #e4e1dc;
+    border-radius: 12px;
+}
+
+.post-search-box {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    max-width: 520px;
+}
+
+.post-search-box input {
+    flex: 1;
+    border: 1px solid #d9d6d1;
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+    font-size: 13px;
+}
+
+.post-filter-buttons {
+    display: flex;
+    gap: 7px;
+}
+
+.post-filter-btn {
+    border: 1px solid #ddd9d3;
+    background: #fff;
+    border-radius: 7px;
+    padding: 9px 13px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.post-filter-btn.active {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+}
+
+/* =========================================================
+   POSTS GRID
+========================================================= */
+
+.posts-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+/* =========================================================
+   POST CARD
+========================================================= */
+
+.post-card {
+    background: #fff;
+    border: 1px solid #e3e0db;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+}
+
+.post-card h3 {
+    margin: 0;
+    padding: 15px 16px 10px;
+    font-size: 17px;
+    line-height: 1.3;
+}
+
+.post-image {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.post-content {
+    padding: 12px 16px 5px;
+    color: #555;
+    font-size: 13px;
+    line-height: 1.55;
+    overflow: hidden;
+    min-height: 25px;
+}
+
+.post-meta {
+    padding: 8px 16px;
+    color: #888;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.post-actions {
+    display: flex;
+    gap: 7px;
+    padding: 5px 16px 16px;
+    flex-wrap: wrap;
+}
+
+.post-action-btn {
+    border: 1px solid #ddd9d3;
+    background: #fff;
+    color: #444;
+    border-radius: 7px;
+    padding: 7px 11px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.post-view-btn {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+}
+
+.post-delete-btn {
+    color: #b42318;
+    border-color: #ead0cd;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.posts-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 28px;
+}
+
+.posts-pagination button {
+    min-width: 34px;
+    height: 34px;
+    border: 1px solid #ddd9d3;
+    background: #fff;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.posts-pagination button.active {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1000px) {
+    .posts-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .posts-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .post-search-box {
+        max-width: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .posts-list {
+        grid-template-columns: 1fr;
+    }
+
+    .post-image {
+        height: 230px;
+    }
+}
+
+/* =========================================================
+   FULL POST VIEW
+========================================================= */
+
+.posts-list.full-post-mode {
+    display: block;
+    width: 100%;
+}
+
+.posts-list.full-post-mode .full-post-view {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+.full-post-view {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e2dfda;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.full-post-topbar {
+    display: flex;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid #eeeae5;
+    background: #faf9f7;
+}
+
+.full-post-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 45px 50px 65px;
+}
+
+.full-post-label {
+    display: block;
+    color: #999;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+}
+
+.full-post-title {
+    margin: 0 0 15px;
+    color: #181818;
+    font-size: 42px;
+    line-height: 1.15;
+    letter-spacing: -1px;
+}
+
+.full-post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    color: #888;
+    font-size: 12px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #eeeae5;
+    margin-bottom: 30px;
+}
+
+.full-post-image-wrapper {
+    width: 100%;
+    margin-bottom: 35px;
+}
+
+.full-post-image {
+    display: block;
+    width: 100%;
+    max-height: 600px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.full-post-text {
+    color: #333;
+    font-size: 17px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+@media (max-width: 700px) {
+    .posts-list.full-post-mode .full-post-view {
+        border-radius: 12px;
+    }
+
+    .full-post-content {
+        padding: 30px 22px 45px;
+    }
+
+    .full-post-title {
+        font-size: 32px;
+    }
+
+    .full-post-text {
+        font-size: 16px;
+    }
+
+    .full-post-image {
+        max-height: 400px;
+    }
+}
+
+.post-like-btn,
+.post-comments-btn {
+    background: #fff;
+}
+
+.post-like-btn:hover,
+.post-comments-btn:hover {
+    background: #f4f3f0;
+}
+
+.post-like-btn:disabled,
+.post-comments-btn:disabled {
+    opacity: .6;
+    cursor: wait;
+}

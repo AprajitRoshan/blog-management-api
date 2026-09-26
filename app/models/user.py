@@ -8,9 +8,43 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), unique=True, nullable=False, index=True)
-    email = Column(String(100), unique=True, nullable=False, index=True)
-    password = Column(String(255), nullable=False)
+
+    username = Column(
+        String(50),
+        unique=True,
+        nullable=False,
+        index=True
+    )
+
+    email = Column(
+        String(100),
+        unique=True,
+        nullable=True,
+        index=True
+    )
+
+    # Normal users have a password.
+    # Social users can have this as NULL.
+    password = Column(
+        String(255),
+        nullable=True
+    )
+
+    # Authentication provider:
+    # "local", "google", or "facebook"
+    auth_provider = Column(
+        String(50),
+        nullable=False,
+        default="local"
+    )
+
+    # Auth0 user identifier
+    auth0_sub = Column(
+        String(255),
+        unique=True,
+        nullable=True,
+        index=True
+    )
 
     subscription_plan_id = Column(
         Integer,
@@ -42,7 +76,7 @@ class User(Base):
     )
 
     notifications = relationship(
-    "Notification",
-    back_populates="user",
-    cascade="all, delete-orphan"
-)
+        "Notification",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
